@@ -30,7 +30,7 @@ contract DACOTokenCrowdsale is Ownable {
     bool public isFinalized;
 
     // The token being sold
-    MintableToken public token;
+    address public token;
 
     uint256 public mainSaleWeiCap;
 
@@ -56,20 +56,19 @@ contract DACOTokenCrowdsale is Ownable {
     event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
     event FinalisedCrowdsale(uint256 totalSupply, uint256 minterBenefit);
 
-    function DACOTokenCrowdsale(uint256 _mainSaleWeiCap, uint256 _rate, address _wallet, string _description) public {
+    function DACOTokenCrowdsale(uint256 _mainSaleWeiCap, uint256 _rate, address _token, address _wallet, string _description) public {
         require(_mainSaleWeiCap > 0);
         require(_rate > 0);
         require(_wallet != 0x0);
 
         goal = _mainSaleWeiCap;
         rate = _rate;
+        token = _token;
         wallet = _wallet;
         description = _description;
 
         isFinalized = false;
 
-        token = new DACOToken();
-        vault = new RefundVault(wallet);
     }
 
     // fallback function can be used to buy tokens
@@ -82,28 +81,22 @@ contract DACOTokenCrowdsale is Ownable {
         require(investor != 0x0);
         require(msg.value != 0);
         require(!isFinalized);
-
-        uint256 weiAmount = msg.value;
-
-        validateWithinCaps(weiAmount);
-
-        // calculate token amount to be created
-        uint256 tokens = weiAmount.mul(rate);
-
-        // update state
-        weiRaised = weiRaised.add(weiAmount);
-        token.mint(investor, tokens);
-        forwardFunds();
-    }
-
-    //send ether to the fund collection of the wallet
-    function sendFunds(uint256 amount) public payable {
-        require(!isFinalized);
         require(!goalReached());
-        require(vault.hasSum(msg.sender, msg.value));
-        wallet.transfer(msg.value);
-        vault.enableRefunds();
-        vault.refund(msg.sender);
+        // update state
+        uint256 change = 0;
+        uint256 amount = msg.value;
+        uint256 wantage = mainSaleWeiCap - weiRaised;
+        if (amount > wantage) {
+            change = amount - wantage;
+            amount = wantage;
+        }
+        if (change > 0) {
+            investor.transfer(change);
+        }
+        uint256 tokens = amount.mul(rate);
+        wallet.transfer(amount);
+        DACOToken(token).transfer(investor, amount);
+        weiRaised = weiRaised.add(wantage);
     }
 
     // set company finalization status
@@ -132,29 +125,7 @@ contract DACOTokenCrowdsale is Ownable {
         mainSaleWeiCap = _mainSaleWeiCap;
     }
 
-    // set token Ownership
-    function transferTokenOwnership(address newOwner) external onlyOwner {
-        DACOToken(token).transferOwnership(newOwner);
-    }
-
-    // send ether to the fund collection wallet
-    function forwardFunds() internal {
-        //wallet.transfer(msg.value);
-        vault.deposit.value(msg.value)(msg.sender);
-    }
-    function validateWithinCaps(uint256 weiAmount) internal constant {
-        uint256 expectedWeiRaised = weiRaised.add(weiAmount);
-        require(expectedWeiRaised <= mainSaleWeiCap);
-    }
-
-    // if crowdsale is unsuccessful, investors can claim refunds here
-    function claimRefund() public {
-        require(isFinalized);
-        require(!goalReached());
-        vault.refund(msg.sender);
-    }
-
     function goalReached() public constant returns (bool) {
-        return weiRaised >= goal;
+        return weiRaised >= mainSaleWeiCap;
     }
 }
