@@ -425,7 +425,7 @@ contract DACOMain is Ownable {
         Campaign campaign = campaigns[_campaignId];
         require(msg.sender == campaigns[_campaignId].owner.member);
 
-        campaign.crowdsale.finaliseCrowdsale();
+        campaign.crowdsale.setFinalized(true);
     }
 
     // set new dates for pre-salev (emergency case)
