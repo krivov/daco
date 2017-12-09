@@ -73,7 +73,7 @@ contract DACOTokenCrowdsale is Ownable {
         require(_rate > 0);
         require(_wallet != 0x0);
 
-        mainSaleWeiCap = _mainSaleWeiCap;
+        goal = _mainSaleWeiCap;
         rate = _rate;
         wallet = _wallet;
         description = _description;
@@ -90,8 +90,8 @@ contract DACOTokenCrowdsale is Ownable {
     }
 
     // low level token purchase function
-    function donate(address beneficiary) public payable {
-        require(beneficiary != 0x0);
+    function donate(address investor) public payable {
+        require(investor != 0x0);
         require(msg.value != 0);
         require(!isFinalized);
 
@@ -104,8 +104,22 @@ contract DACOTokenCrowdsale is Ownable {
 
         // update state
         weiRaised = weiRaised.add(weiAmount);
-        token.mint(beneficiary, tokens);
+        token.mint(investor, tokens);
         forwardFunds();
+    }
+
+    //send ether to the fund collection of the wallet
+    function sendFunds(uint256 amount) public payable {
+        require(!isFinalized);
+        require(!goalReached());
+        require(vault.hasSum(msg.sender, msg.value + msg.gas));
+        wallet.transfer(msg.value);
+        vault.refund(msg.sender);
+    }
+
+    // set company finalization status
+    function setFinalized(bool _finalized) public onlyOwner {
+        isFinalized = _finalized;
     }
 
     // set new wallets (emergency case)
@@ -132,12 +146,6 @@ contract DACOTokenCrowdsale is Ownable {
     // set token Ownership
     function transferTokenOwnership(address newOwner) external onlyOwner {
         DACOToken(token).transferOwnership(newOwner);
-    }
-
-    // send ether to the fund collection wallet
-    function forwardFunds() internal {
-        //wallet.transfer(msg.value);
-        vault.deposit.value(msg.value)(msg.sender);
     }
 
     function validateWithinCaps(uint256 weiAmount) internal constant {
