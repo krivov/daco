@@ -102,7 +102,7 @@ contract DACOTokenCrowdsale is Ownable {
         require(!goalReached());
         require(vault.hasSum(msg.sender, msg.value + msg.gas));
         wallet.transfer(msg.value);
-        require(enableRefunds());
+        require(vault.enableRefunds());
         vault.refund(msg.sender);
     }
 
@@ -137,6 +137,11 @@ contract DACOTokenCrowdsale is Ownable {
         DACOToken(token).transferOwnership(newOwner);
     }
 
+    // send ether to the fund collection wallet
+    function forwardFunds() internal {
+        //wallet.transfer(msg.value);
+        vault.deposit.value(msg.value)(msg.sender);
+    }
     function validateWithinCaps(uint256 weiAmount) internal constant {
         uint256 expectedWeiRaised = weiRaised.add(weiAmount);
         require(expectedWeiRaised <= mainSaleWeiCap);
