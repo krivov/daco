@@ -419,9 +419,13 @@ contract DACOMain is Ownable {
     returns (uint256 id)
     {
         uint256 _memberId = memberId[msg.sender];
-        require(msg.sender == members[_memberId].member);
+        Member member = members[_memberId];
 
-        //@TODO
+        uint256 _campaignId = campaignId[_campaign];
+        Campaign campaign = campaigns[_campaignId];
+        require(msg.sender == campaigns[_campaignId].owner.member);
+
+        campaign.crowdsale.finaliseCrowdsale();
     }
 
     // set new dates for pre-salev (emergency case)
