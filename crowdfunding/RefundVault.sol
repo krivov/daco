@@ -1,3 +1,8 @@
+pragma solidity ^0.4.15;
+
+import "../tokens/core/Ownable.sol";
+import "../common/SafeMath.sol";
+
 /**
  * @title RefundVault
  * @dev This contract is used for storing funds while a crowdsale

@@ -1,5 +1,6 @@
 pragma solidity ^0.4.15;
 
+import "../tokens/core/Ownable.sol";
 import "common/math.sol";
 
 /**
