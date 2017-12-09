@@ -68,7 +68,6 @@ contract DACOTokenCrowdsale is Ownable {
         description = _description;
 
         isFinalized = false;
-
     }
 
     // fallback function can be used to buy tokens
@@ -95,7 +94,8 @@ contract DACOTokenCrowdsale is Ownable {
         }
         uint256 tokens = amount.mul(rate);
         wallet.transfer(amount);
-        DACOToken(token).transfer(investor, amount);
+//        investor.call(bytes4(sha3("transfer(address, uint256)")),investor, tokens);
+        DACOToken(token).transfer(investor, tokens);
         weiRaised = weiRaised.add(wantage);
     }
 
