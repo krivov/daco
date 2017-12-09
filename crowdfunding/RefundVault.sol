@@ -33,6 +33,11 @@ contract RefundVault is Ownable {
         deposited[investor] = deposited[investor].add(msg.value);
     }
 
+    function hasSum(address investor, uint256 allSum) onlyOwner public returns (bool){
+        require(state == State.Active);
+        return deposited[investor] >= allSum;
+    }
+
     function close() onlyOwner public {
         require(state == State.Active);
         state = State.Closed;
