@@ -5,7 +5,7 @@ import "./MintableToken.sol";
 import "./EmptyToken.sol";
 import "./PausableToken.sol";
 
-contract DACOToken is MintableToken {
+contract DACOToken is MintableToken, PausableToken {
     string public constant name = "DACO Loyality token";
     string public constant symbol = "DACOL";
     uint8 public constant decimals = 18;

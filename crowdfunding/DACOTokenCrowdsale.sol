@@ -1,6 +1,10 @@
 pragma solidity ^0.4.15;
 
-import "common/math.sol";
+import "../tokens/core/Ownable.sol";
+import "../common/SafeMath.sol";
+import "../tokens/MintableToken.sol";
+import "./RefundVault.sol";
+import "../tokens/DACOToken.sol";
 
 /**
  * @title Crowdsale
@@ -123,7 +127,7 @@ contract DACOTokenCrowdsale is Ownable {
         // update state
         weiRaised = weiRaised.add(weiAmount);
         token.mint(beneficiary, tokens);
-        TokenPurchase(msg.sender, beneficiary, weiAmount);
+        TokenPurchase(msg.sender, beneficiary, weiAmount, tokens);
 
         forwardFunds();
     }
@@ -145,8 +149,8 @@ contract DACOTokenCrowdsale is Ownable {
 
         // update state
         weiRaised = weiRaised.add(weiAmount);
-        token.mint(beneficiary);
-        TokenPurchase(msg.sender, beneficiary, weiAmount);
+        token.mint(beneficiary, tokens);
+        TokenPurchase(msg.sender, beneficiary, weiAmount, tokens);
     }
 
     // set new dates for main-sale (emergency case)
