@@ -67,6 +67,17 @@ contract DACOMain is Ownable {
         string description);
 
     /**
+     * @dev On campaign added
+     * @param proposal Proposal identifier
+     * @param recipient Ether recipient
+     * @param amount Amount of wei to transfer
+     */
+    event CampaignAdded(uint256 indexed campaign,
+        address indexed wallet,
+        uint256 indexed amount,
+        string description);
+
+    /**
      * @dev On vote by member accepted
      * @param proposal Proposal identifier
      * @param position Is proposal accepted by memeber
@@ -133,7 +144,9 @@ contract DACOMain is Ownable {
     }
 
     struct Campaign {
-        address campaign;
+        address wallet;
+        uint256 amount;
+        string description;
     }
 
     /**
@@ -156,8 +169,11 @@ contract DACOMain is Ownable {
         changeVotingRules(minimumQuorumForProposals, minutesForDebate, marginOfVotesForMajority);
         // It’s necessary to add an empty first member
         addMember(0, ''); // and let's add the founder, to save a step later
-        if (congressLeader != 0)
+        if (congressLeader != 0) {
             addMember(congressLeader, 'The Founder');
+        }
+
+
     }
 
     /**
@@ -337,5 +353,30 @@ contract DACOMain is Ownable {
         }
         // Fire Events
         ProposalTallied(id, p.numberOfVotes, p.proposalPassed);
+    }
+
+    /**
+     * @dev Create a new campaign
+     * @param wallet Beneficiary wallet address
+     * @param amount HardCap value in Wei
+     * @param description Campaign description string
+     */
+    function newCampaign(
+        address wallet,
+        uint256 amount,
+        string  description
+    )
+    public
+    onlyMembers
+    returns (uint256 id)
+    {
+        id                 = campaigns.length++;
+        Campaign storage c = campaigns[id];
+
+        c.wallet           = wallet;
+        c.amount           = amount;
+        c.description      = description;
+
+        CampaignAdded(id, wallet, amount, description);
     }
 }
