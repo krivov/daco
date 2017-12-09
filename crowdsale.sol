@@ -1,34 +1,7 @@
 pragma solidity ^0.4.15;
 
-/**
- * @title SafeMath
- * @dev Math operations with safety checks that throw on error
- */
-library SafeMath {
-  function mul(uint256 a, uint256 b) internal constant returns (uint256) {
-    uint256 c = a * b;
-    assert(a == 0 || c / a == b);
-    return c;
-  }
-
-  function div(uint256 a, uint256 b) internal constant returns (uint256) {
-    // assert(b > 0); // Solidity automatically throws when dividing by 0
-    uint256 c = a / b;
-    // assert(a == b * c + a % b); // There is no case in which this doesn't hold
-    return c;
-  }
-
-  function sub(uint256 a, uint256 b) internal constant returns (uint256) {
-    assert(b <= a);
-    return a - b;
-  }
-
-  function add(uint256 a, uint256 b) internal constant returns (uint256) {
-    uint256 c = a + b;
-    assert(c >= a);
-    return c;
-  }
-}
+import "./math.sol";
+import "./token.sol";
 
 /**
  * @title RefundVault
@@ -215,7 +188,7 @@ contract DACOTokenCrowdsale is Ownable {
 
     isFinalized = false;
 
-    token = new WELToken();
+    token = new DACOToken();
     vault = new RefundVault(wallet);
   }
 
@@ -331,17 +304,17 @@ contract DACOTokenCrowdsale is Ownable {
   // set token on pause
   function pauseToken() external onlyOwner {
     require(!isFinalized);
-    WELToken(token).pause();
+    DACOToken(token).pause();
   }
 
   // unset token's pause
   function unpauseToken() external onlyOwner {
-    WELToken(token).unpause();
+    DACOToken(token).unpause();
   }
 
   // set token Ownership
   function transferTokenOwnership(address newOwner) external onlyOwner {
-    WELToken(token).transferOwnership(newOwner);
+    DACOToken(token).transferOwnership(newOwner);
   }
 
   // @return true if main sale event has ended
