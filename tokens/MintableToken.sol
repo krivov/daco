@@ -1,6 +1,6 @@
 pragma solidity ^0.4.15;
 
-import "./core/StandardToken.sol";
+import "./core/BasicToken.sol";
 import "./core/Ownable.sol";
 
 /**
@@ -10,7 +10,7 @@ import "./core/Ownable.sol";
  * Based on code by TokenMarketNet: https://github.com/TokenMarketNet/ico/blob/master/contracts/MintableToken.sol
  */
 
-contract MintableToken is StandardToken, Ownable {
+contract MintableToken is BasicToken, Ownable {
     event Mint(address indexed to, uint256 amount);
     event MintFinished();
 
