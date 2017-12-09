@@ -3,6 +3,7 @@ pragma solidity ^0.4.18;
 import "./tokens/core/Ownable.sol";
 import "./tokens/DACOToken.sol";
 import "./crowdfunding/DACOTokenCrowdsale.sol";
+import "./common/SafeMath.sol";
 
 /**
  * @title Improved congress contract by Ethereum Foundation
@@ -49,6 +50,12 @@ contract DACOMain is Ownable {
      * @dev Campaigns list
      */
     Campaign[] public campaigns;
+
+    // The token being sold
+    DACOToken public token;
+
+    // how many token units a buyer gets per wei
+    uint256 public rate;
 
     /**
      * @dev Get campaign identifier by account address
@@ -144,9 +151,12 @@ contract DACOMain is Ownable {
     }
 
     struct Campaign {
+        DACOTokenCrowdsale crowdsale;
+        Member owner;
         address wallet;
         uint256 amount;
         string description;
+        bool isFinished;
     }
 
     /**
@@ -164,7 +174,8 @@ contract DACOMain is Ownable {
         uint256 minimumQuorumForProposals,
         uint256 minutesForDebate,
         int256  marginOfVotesForMajority,
-        address congressLeader
+        address congressLeader,
+        uint256 _rate //0.0000000000000001
     ) public {
         changeVotingRules(minimumQuorumForProposals, minutesForDebate, marginOfVotesForMajority);
         // It’s necessary to add an empty first member
@@ -173,7 +184,8 @@ contract DACOMain is Ownable {
             addMember(congressLeader, 'The Founder');
         }
 
-
+        token = new DACOToken();
+        rate = _rate;
     }
 
     /**
@@ -362,21 +374,65 @@ contract DACOMain is Ownable {
      * @param description Campaign description string
      */
     function newCampaign(
-        address wallet,
-        uint256 amount,
-        string  description
+        address _wallet,
+        uint256 _amount,
+        string  _description
     )
     public
     onlyMembers
     returns (uint256 id)
     {
+        uint256 _memberId = memberId[msg.sender];
+
         id                 = campaigns.length++;
         Campaign storage c = campaigns[id];
 
-        c.wallet           = wallet;
-        c.amount           = amount;
-        c.description      = description;
+        c.wallet           = _wallet;
+        c.amount           = _amount;
+        c.description      = _description;
+        c.owner            = members[_memberId].member;
+        c.isFinished       = false;
+
+        uint256 amountWei = _amount.mul(1000000000000000000);
+
+        c.crowdsale        = new DACOTokenCrowdsale(
+            amountWei,
+            rate,
+            _wallet,
+            _description
+        );
 
         CampaignAdded(id, wallet, amount, description);
+    }
+
+    /**
+     * @dev Create a new campaign
+     * @param wallet Beneficiary wallet address
+     * @param amount HardCap value in Wei
+     * @param description Campaign description string
+     */
+    function endCampaign(
+        address _campaign
+    )
+    public
+    onlyMembers
+    returns (uint256 id)
+    {
+        uint256 _memberId = memberId[msg.sender];
+        require(msg.sender == members[_memberId].member);
+
+        //@TODO
+    }
+
+    // set new dates for pre-salev (emergency case)
+    function setRate(
+        uint256 _rate
+    )
+    public
+    onlyOwner
+    returns (bool)
+    {
+        rate = _rate;
+        return true;
     }
 }
