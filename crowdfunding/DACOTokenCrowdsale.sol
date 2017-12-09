@@ -61,7 +61,7 @@ contract DACOTokenCrowdsale is Ownable {
         require(_rate > 0);
         require(_wallet != 0x0);
 
-        goal = _mainSaleWeiCap;
+        mainSaleWeiCap = _mainSaleWeiCap;
         rate = _rate;
         token = _token;
         wallet = _wallet;
