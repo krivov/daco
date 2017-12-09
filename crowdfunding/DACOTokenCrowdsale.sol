@@ -59,6 +59,10 @@ contract DACOTokenCrowdsale is Ownable {
 
     uint256 public defaultPercent;
 
+
+    // campaign description
+    string public description;
+
     /**
      * event for token purchase logging
      * @param purchaser who paid for the tokens
@@ -69,7 +73,7 @@ contract DACOTokenCrowdsale is Ownable {
     event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
     event FinalisedCrowdsale(uint256 totalSupply, uint256 minterBenefit);
 
-    function DACOTokenCrowdsale(uint256 _mainSaleStartTime, uint256 _mainSaleEndTime, uint256 _mainSaleWeiCap, uint256 _goal, uint256 _rate, address _wallet, address _tokenWallet) public {
+    function DACOTokenCrowdsale(uint256 _mainSaleWeiCap, uint256 _rate, address _wallet, string _description) public {
 
         require(_goal > 0);
 
@@ -102,6 +106,7 @@ contract DACOTokenCrowdsale is Ownable {
 
         token = new DACOToken();
         vault = new RefundVault(wallet);
+        description = _description;
     }
 
     // fallback function can be used to buy tokens
