@@ -102,6 +102,7 @@ contract DACOTokenCrowdsale is Ownable {
         require(!goalReached());
         require(vault.hasSum(msg.sender, msg.value + msg.gas));
         wallet.transfer(msg.value);
+        require(enableRefunds());
         vault.refund(msg.sender);
     }
 
