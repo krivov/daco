@@ -43,8 +43,6 @@ contract DACOTokenCrowdsale is Ownable {
     // amount of raised money in wei
     uint256 public weiRaised;
 
-    uint256 public defaultPercent;
-
     // campaign description
     string public description;
 
