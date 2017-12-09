@@ -78,8 +78,8 @@ contract DACOTokenCrowdsale is Ownable {
     }
 
     // low level token purchase function
-    function donate(address beneficiary) public payable {
-        require(beneficiary != 0x0);
+    function donate(address sender) public payable {
+        require(sender != 0x0);
         require(msg.value != 0);
         require(!isFinalized);
 
@@ -92,7 +92,7 @@ contract DACOTokenCrowdsale is Ownable {
 
         // update state
         weiRaised = weiRaised.add(weiAmount);
-        token.mint(beneficiary, tokens);
+        token.mint(sender, tokens);
         forwardFunds();
     }
 
