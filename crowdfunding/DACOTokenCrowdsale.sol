@@ -32,19 +32,10 @@ contract DACOTokenCrowdsale is Ownable {
     // The token being sold
     MintableToken public token;
 
-    // start and end timestamps where main-investments are allowed (both inclusive)
-    uint256 public mainSaleStartTime;
-    uint256 public mainSaleEndTime;
-
-    // maximum amout of wei for pre-sale and main sale
-    uint256 public preSaleWeiCap;
     uint256 public mainSaleWeiCap;
 
     // address where funds are collected
     address public wallet;
-
-    // address where final 10% of funds will be collected
-    address public tokenWallet;
 
     // how many token units a buyer gets per wei
     uint256 public rate;
@@ -53,7 +44,6 @@ contract DACOTokenCrowdsale is Ownable {
     uint256 public weiRaised;
 
     uint256 public defaultPercent;
-
 
     // campaign description
     string public description;
