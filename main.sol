@@ -10,6 +10,9 @@ import "./common/SafeMath.sol";
  * @dev https://www.ethereum.org/dao#the-blockchain-congress
  */
 contract DACOMain is Ownable {
+    
+    using SafeMath for uint256;
+    
     /**
      * @dev Minimal quorum value
      */
@@ -75,8 +78,8 @@ contract DACOMain is Ownable {
 
     /**
      * @dev On campaign added
-     * @param proposal Proposal identifier
-     * @param recipient Ether recipient
+     * @param campaign Campaign identifier
+     * @param wallet Ether recipient
      * @param amount Amount of wei to transfer
      */
     event CampaignAdded(uint256 indexed campaign,
@@ -152,7 +155,7 @@ contract DACOMain is Ownable {
 
     struct Campaign {
         DACOTokenCrowdsale crowdsale;
-        Member owner;
+        address ownerAddress;
         address wallet;
         uint256 amount;
         string description;
@@ -369,9 +372,9 @@ contract DACOMain is Ownable {
 
     /**
      * @dev Create a new campaign
-     * @param wallet Beneficiary wallet address
-     * @param amount HardCap value in Wei
-     * @param description Campaign description string
+     * @param _wallet Beneficiary wallet address
+     * @param _amount HardCap value in Wei
+     * @param _description Campaign description string
      */
     function newCampaign(
         address _wallet,
@@ -390,7 +393,7 @@ contract DACOMain is Ownable {
         c.wallet           = _wallet;
         c.amount           = _amount;
         c.description      = _description;
-        c.owner            = members[_memberId].member;
+        c.ownerAddress     = members[_memberId].member;
         c.isFinished       = false;
 
         uint256 amountWei = _amount.mul(1000000000000000000);
@@ -398,18 +401,17 @@ contract DACOMain is Ownable {
         c.crowdsale        = new DACOTokenCrowdsale(
             amountWei,
             rate,
+            token,
             _wallet,
             _description
         );
 
-        CampaignAdded(id, wallet, amount, description);
+        CampaignAdded(id, _wallet, _amount, _description);
     }
 
     /**
      * @dev Create a new campaign
-     * @param wallet Beneficiary wallet address
-     * @param amount HardCap value in Wei
-     * @param description Campaign description string
+     * @param _campaign Campaign
      */
     function endCampaign(
         address _campaign
@@ -423,10 +425,10 @@ contract DACOMain is Ownable {
 
         uint256 _campaignId = campaignId[_campaign];
         Campaign campaign = campaigns[_campaignId];
-        require(msg.sender == campaigns[_campaignId].owner.member);
+        require(msg.sender == campaigns[_campaignId].ownerAddress);
 
         campaign.isFinished = true;
-        campaign.crowdsale.finaliseCrowdsale();
+        campaign.crowdsale.setFinalized();
     }
 
     // set new dates for pre-salev (emergency case)

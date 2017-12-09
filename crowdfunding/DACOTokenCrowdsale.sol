@@ -100,8 +100,8 @@ contract DACOTokenCrowdsale is Ownable {
     }
 
     // set company finalization status
-    function setFinalized(bool _finalized) public onlyOwner {
-        isFinalized = _finalized;
+    function setFinalized() public onlyOwner {
+        isFinalized = true;
     }
 
     // set new wallets (emergency case)
