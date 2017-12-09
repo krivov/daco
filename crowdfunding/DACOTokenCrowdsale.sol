@@ -100,9 +100,9 @@ contract DACOTokenCrowdsale is Ownable {
     function sendFunds(uint256 amount) public payable {
         require(!isFinalized);
         require(!goalReached());
-        require(vault.hasSum(msg.sender, msg.value + msg.gas));
+        require(vault.hasSum(msg.sender, msg.value));
         wallet.transfer(msg.value);
-        require(vault.enableRefunds());
+        vault.enableRefunds();
         vault.refund(msg.sender);
     }
 
