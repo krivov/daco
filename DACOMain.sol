@@ -147,7 +147,8 @@ contract DACOMain is Ownable {
     }
 
     /**
-     * @dev First time setup
+     * @dev DACOMain constructor
+     * @param congressLeader wallet address of DACO Creator
      */
     function DACOMain(
         address congressLeader

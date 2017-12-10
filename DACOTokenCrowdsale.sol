@@ -51,6 +51,13 @@ contract DACOTokenCrowdsale is Ownable {
     event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
     event FinalisedCrowdsale(uint256 totalSupply, uint256 minterBenefit);
 
+    /**
+     * @dev DACOTokenCrowdsale constructor
+     * @param _mainSaleWeiCap the amount required to be collected under this company
+     * @param _rate wei to token rate
+     * @param _token DACO token address
+     * @param _wallet wallet where to the donate should be translated
+     */
     function DACOTokenCrowdsale(uint256 _mainSaleWeiCap, uint256 _rate, address _token, address _wallet, string _description) public {
         require(_mainSaleWeiCap > 0);
         require(_rate > 0);
