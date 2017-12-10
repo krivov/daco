@@ -5,9 +5,6 @@
 ### contract [DACOMain](https://github.com/krivov/daco/blob/master/DACOMain.sol) is Ownable:
 Improved congress contract by [Ethereum Foundation](https://www.ethereum.org/dao#the-blockchain-congress)
 #### methods:
-```
-function addMember(address targetMember, string memberName) public onlyOwner { ... }
-```
 Append new congress member
 * *targetMember* - member account address
 * *memberName* - member full name
