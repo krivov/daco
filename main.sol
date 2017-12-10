@@ -406,6 +406,8 @@ contract DACOMain is Ownable {
             _description
         );
 
+        token.mint(c.crowdsale, rate.mul(amountWei));
+
         CampaignAdded(id, _wallet, _amount, _description);
     }
 
