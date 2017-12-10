@@ -71,7 +71,7 @@ contract DACOTokenCrowdsale is Ownable {
     }
 
     // low level token purchase function
-    function donate(address investor) public payable {
+    function donate(address investor) payable {
         require(investor != 0x0);
         require(msg.value != 0);
         require(!isFinalized);
@@ -96,27 +96,6 @@ contract DACOTokenCrowdsale is Ownable {
     // set company finalization status
     function setFinalized() public onlyOwner {
         isFinalized = true;
-    }
-
-    // set new wallets (emergency case)
-    function setWallets(address _wallet) public onlyOwner {
-        require(!isFinalized);
-        require(_wallet != 0x0);
-        wallet = _wallet;
-    }
-
-    // set new rate (emergency case)
-    function setRate(uint256 _rate) public onlyOwner {
-        require(!isFinalized);
-        require(_rate > 0);
-        rate = _rate;
-    }
-
-    // set new goal (emergency case)
-    function setGoal(uint256 _mainSaleWeiCap) public onlyOwner {
-        require(!isFinalized);
-        require(_mainSaleWeiCap > 0);
-        mainSaleWeiCap = _mainSaleWeiCap;
     }
 
     function goalReached() public constant returns (bool) {
