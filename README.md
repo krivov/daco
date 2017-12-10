@@ -8,7 +8,7 @@ Charity organization get needed money, businesses expands their client base, don
 ## DACO API
 
 ### contract [DACOMain](https://github.com/krivov/daco/blob/master/DACOMain.sol) is Ownable:
-Improved congress contract by [Ethereum Foundation](https://www.ethereum.org/dao#the-blockchain-congress)
+Improved congress contract by [Ethereum Foundation](https://www.ethereum.org/dao#the-blockchain-congress).
 #### methods:
 Append new congress member:
 ```solidity
@@ -52,7 +52,7 @@ function changeVotingRules(
 * *minutesForDebate* - debate deadline in minutes
 * *marginOfVotesForMajority* - majority margin value
 
-Remove congress member
+Remove congress member:
 ```solidity
 function removeMember(
     address targetMember
