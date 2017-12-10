@@ -403,6 +403,7 @@ contract DACOMain is Ownable {
         );
 
         token.mint(c.crowdsale, rate.mul(amountWei));
+        token.addCampaign(c.crowdsale);
 
         CampaignAdded(id, _wallet, _amount, _description);
     }
@@ -427,6 +428,8 @@ contract DACOMain is Ownable {
 
         campaign.isFinished = true;
         campaign.crowdsale.setFinalized();
+
+        token.removeCampaign(campaign.crowdsale);
     }
 
     // set new dates for pre-salev (emergency case)
