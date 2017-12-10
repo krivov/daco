@@ -267,6 +267,8 @@ contract DACOMain is Ownable {
         p.numberOfVotes++;                      // Increase the number of votes
 
         if (p.numberOfVotes == majorityMargin) {
+            p.proposalPassed   = true;
+
             id                 = campaigns.length++;
             Campaign storage c = campaigns[id];
 
