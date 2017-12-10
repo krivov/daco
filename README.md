@@ -1,4 +1,4 @@
-# DACO :green_heart: Decentralized autonomous charity organization
+# DACO :green_heart: Decentralized Autonomous Charity Organization
 
 ## DACO API
 
@@ -78,7 +78,7 @@ function setRate(
 
 ### contract [DACOTokenCrowdsale](https://github.com/krivov/daco/blob/master/DACOTokenCrowdsale.sol) is Ownable:
 Contract that allows to donate funds to compaign and to close compaign.
-####methods:
+#### methods:
 Low level token purchase function:
 ```solidity
 function donate(
