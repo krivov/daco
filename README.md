@@ -5,33 +5,33 @@ Open heart people donate money for project that they like
 Socially responsible businesses that also want to take part in charity project offer donators discounts for their services or products.
 Charity organization get needed money, businesses expands their client base, donators receives discounts and a plus in their karma that is much more important.
 
+* :link:DACO smartcontract address - **0xc19D435E84B921f268B465d36651AC6CB82888bB**
+* :link:DACO Token smartcontract address - **0x0fa0ff095762aa1c612797a6a49f576ae677944c**
+
 ## DACO API
 
 ### contract [DACOMain](https://github.com/krivov/daco/blob/master/DACOMain.sol) is Ownable:
 Improved congress contract by [Ethereum Foundation](https://www.ethereum.org/dao#the-blockchain-congress)
 #### methods:
 Append new congress member
-* *targetMember* - member account address
-* *memberName* - member full name
 ```solidity
 function addMember(
     address targetMember, 
     string memberName
 ) public onlyOwner { ... }
 ```
+* *targetMember* - member account address
+* *memberName* - member full name
 
 Proposal voting
-* *id* - proposal identifier
 ```solidity
 function vote(
     uint256 id
 ) public onlyMembers { ... }
 ```
+* *id* - proposal identifier
 
 Create a new campaign
-* *_wallet* - beneficiary wallet address
-* *_amount* - hardCap value in Wei
-* *_description* - campaign description string
 ```solidity
 function newCampaign(
     address _wallet, 
@@ -39,11 +39,11 @@ function newCampaign(
     string  _description
 ) public onlyMembers { ... }
 ```
+* *_wallet* - beneficiary wallet address
+* *_amount* - hardCap value in Wei
+* *_description* - campaign description string
 
 Change rules of voting
-* *minimumQuorumForProposals* - minimal count of votes
-* *minutesForDebate* - debate deadline in minutes
-* *marginOfVotesForMajority* - majority margin value
 ```solidity
 function changeVotingRules(
     uint256 minimumQuorumForProposals,
@@ -51,19 +51,19 @@ function changeVotingRules(
     uint256 marginOfVotesForMajority
 ) public onlyOwner { ... }
 ```
+* *minimumQuorumForProposals* - minimal count of votes
+* *minutesForDebate* - debate deadline in minutes
+* *marginOfVotesForMajority* - majority margin value
 
 Remove congress member
-* *targetMember* - member account address
 ```solidity
 function removeMember(
     address targetMember
 ) public onlyOwner { ... }
 ```
+* *targetMember* - member account address
 
 Create a new proposal
-* *wallet* - beneficiary account address
-* *amount* - transaction value in Eth
-* *description* - job description string
 ```solidity
 function newProposal(
     address wallet,
@@ -71,14 +71,17 @@ function newProposal(
     string  description
 ) public returns (uint256 id) { ... }
 ```
+* *wallet* - beneficiary account address
+* *amount* - transaction value in Eth
+* *description* - job description string
 
 Set new rate value
-* *_rate* - factor of convertion wei -> daco token
 ```solidity
 function setRate(
     uint256 _rate
 ) public onlyOwner returns (bool) { ... }
 ```
+* *_rate* - factor of convertion wei -> daco token
 
 
 ### contract [DACOTokenCrowdsale](https://github.com/krivov/daco/blob/master/DACOTokenCrowdsale.sol) is Ownable:
