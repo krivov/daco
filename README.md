@@ -14,6 +14,13 @@ We use [Rinkeby Test Network](https://www.rinkeby.io/)
 
 ### contract [DACOMain](https://github.com/krivov/daco/blob/master/DACOMain.sol) is Ownable:
 Improved congress contract by [Ethereum Foundation](https://www.ethereum.org/dao#the-blockchain-congress).
+```solidity
+function DACOMain(
+    address congressLeader
+) public { ... }
+```
+* *congressLeader* - wallet address of DACO Creator
+
 #### methods:
 Append new congress member:
 ```solidity
@@ -88,6 +95,20 @@ function setRate(
 
 ### contract [DACOTokenCrowdsale](https://github.com/krivov/daco/blob/master/DACOTokenCrowdsale.sol) is Ownable:
 Contract that allows to donate funds to compaign and to close compaign.
+```solidity
+function DACOTokenCrowdsale(
+    uint256 _mainSaleWeiCap, 
+    uint256 _rate, 
+    address _token, 
+    address _wallet, 
+    string _description
+) public { ... }
+```
+* *_mainSaleWeiCap* the amount required to be collected under this company
+* *_rate* - wei to token rate
+* *_token* - DACO token address
+* *_wallet* - wallet where to the donate should be translated
+ 
 #### methods:
 Low level token purchase function:
 ```solidity
