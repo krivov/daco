@@ -1,8 +1,8 @@
 pragma solidity ^0.4.18;
 
-import "./tokens/core/Ownable.sol";
+import "./tokens/Ownable.sol";
 import "./tokens/DACOToken.sol";
-import "./crowdfunding/DACOTokenCrowdsale.sol";
+import "./DACOTokenCrowdsale.sol";
 import "./common/SafeMath.sol";
 
 /**
@@ -417,19 +417,18 @@ contract DACOMain is Ownable {
     )
     public
     onlyMembers
-    returns (uint256 id)
+    returns (bool)
     {
-        uint256 _memberId = memberId[msg.sender];
-        Member member = members[_memberId];
-
         uint256 _campaignId = campaignId[_campaign];
-        Campaign campaign = campaigns[_campaignId];
+        Campaign storage campaign = campaigns[_campaignId];
         require(msg.sender == campaigns[_campaignId].ownerAddress);
 
         campaign.isFinished = true;
         campaign.crowdsale.setFinalized();
 
         token.removeCampaign(campaign.crowdsale);
+        
+        return true;
     }
 
     // set new dates for pre-salev (emergency case)

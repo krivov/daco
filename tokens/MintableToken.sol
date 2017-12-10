@@ -1,7 +1,7 @@
 pragma solidity ^0.4.15;
 
-import "./core/BasicToken.sol";
-import "./core/Ownable.sol";
+import "./BasicToken.sol";
+import "./Ownable.sol";
 
 /**
  * @title Mintable token

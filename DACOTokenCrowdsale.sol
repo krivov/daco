@@ -1,10 +1,8 @@
 pragma solidity ^0.4.15;
 
-import "../tokens/core/Ownable.sol";
-import "../common/SafeMath.sol";
-import "../tokens/MintableToken.sol";
-import "./RefundVault.sol";
-import "../tokens/DACOToken.sol";
+import "./tokens/Ownable.sol";
+import "./common/SafeMath.sol";
+import "./tokens/DACOToken.sol";
 
 /**
  * @title Crowdsale
@@ -22,9 +20,6 @@ contract DACOTokenCrowdsale is Ownable {
 
     // minimum amount of funds to be raised in weis
     uint256 public goal;
-
-    // refund vault used to hold funds while crowdsale is running
-    RefundVault public vault;
 
     // true for finalised crowdsale
     bool public isFinalized;

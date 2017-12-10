@@ -2,17 +2,17 @@ pragma solidity ^0.4.15;
 
 import "../common/SafeMath.sol";
 import "./MintableToken.sol";
-import "./EmptyToken.sol";
+import "./KARMAToken.sol";
 
 contract DACOToken is MintableToken {
-  string public constant name = "DACO Loyality token";
-  string public constant symbol = "DACOL";
+  string public constant name = "DACO Loyality Token";
+  string public constant symbol = "DACO";
   uint8 public constant decimals = 18;
-  EmptyToken public empty_token;
+  KARMAToken public karma_token;
   mapping(address => uint8) campaigns;
   
   function DACOToken() public {
-      empty_token = new EmptyToken();
+      karma_token = new KARMAToken();
   }
   
   function addCampaign(address _campaign) onlyOwner public {
@@ -27,16 +27,17 @@ contract DACOToken is MintableToken {
   
   function transfer(address _to, uint256 _value) public returns (bool) {
     if (campaigns[msg.sender] != 0) {
+        // Transfer if sender is crowdfunding compaign
         super.transfer(_to, _value);
     } else {
+        // Otherwise destroy DACO token and mint KARMA token
         require(_to != address(0));
         require(_value <= balances[msg.sender]);
 
-        // SafeMath.sub will throw if there is not enough balance.
         balances[msg.sender] = balances[msg.sender].sub(_value);
         
         // Mint EmptyToken to receiver
-        empty_token.mint(_to, _value);
+        karma_token.mint(_to, _value);
         Transfer(msg.sender, _to, _value);
     }
     return true;
