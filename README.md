@@ -1,4 +1,5 @@
 # DACO :green_heart: Decentralized Autonomous Charity Organization
+*<p align="right">"charity with benefits, charity in a new blockchain way"</p>*
 Our platform unites charity organizations, businesses and donators in new way.
 Charity organizations creates new social project that needs to be financed. 
 Open heart people donate money for project that they like
