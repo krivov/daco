@@ -102,7 +102,10 @@ Special kind of token that used for user reputation managing.
 It is generated when donator makes a donation. It's equivalent to donate money amount.
 #### methods:
 ```solidity
-function transfer(address _to, uint256 _value) public returns (bool) {
+function transfer(
+    address _to, 
+    uint256 _value
+) public returns (bool) {
     // Transfering is prohobited
     return false;
 }
@@ -113,19 +116,26 @@ Kind of token that is used for getting a discount.
 #### methods:
    Create compaign for fund-raising:
    ```solidity
-   function addCampaign(address _campaign) onlyOwner public { ... }
+function addCampaign(
+   address _campaign
+) onlyOwner public { ... }
    ```
    * *_campaign* - campaign organization account address
    
    Remove compaign:
    ```solidity
-   function removeCampaign(address _campaign) public onlyOwner { ... }
+function removeCampaign(
+   address _campaign
+) public onlyOwner { ... }
    ```
    * *_campaign* - campaign organization account address
 
    Send funds for company maker:
    ```solidity
-   function transfer(address _to, uint256 _value) public returns (bool) { ... }
+function transfer(
+    address _to, 
+    uint256 _value
+) public returns (bool) { ... }
    ```
    * *_to* - campaign organization account address
    * *_value* - amount of wies to send
