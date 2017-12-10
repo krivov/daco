@@ -105,7 +105,7 @@ function transfer(address _to, uint256 _value) public returns (bool) {
 
 ### contract [DACOToken](https://github.com/krivov/daco/blob/master/tokens/DACOToken.sol) is MintableToken:
 Kind of token that is used for getting a discount.
-####methods:
+#### methods:
    Create compaign for fund-raising:
    ```solidity
    function addCampaign(address _campaign) onlyOwner public { ... }
