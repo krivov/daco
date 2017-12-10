@@ -11,9 +11,9 @@ Charity organization get needed money, businesses expands their client base, don
 ## DACO API
 
 ### contract [DACOMain](https://github.com/krivov/daco/blob/master/DACOMain.sol) is Ownable:
-Improved congress contract by [Ethereum Foundation](https://www.ethereum.org/dao#the-blockchain-congress)
+Improved congress contract by [Ethereum Foundation](https://www.ethereum.org/dao#the-blockchain-congress).
 #### methods:
-Append new congress member
+Append new congress member:
 ```solidity
 function addMember(
     address targetMember, 
@@ -23,7 +23,7 @@ function addMember(
 * *targetMember* - member account address
 * *memberName* - member full name
 
-Proposal voting
+Proposal voting:
 ```solidity
 function vote(
     uint256 id
@@ -31,7 +31,7 @@ function vote(
 ```
 * *id* - proposal identifier
 
-Create a new campaign
+Create a new campaign:
 ```solidity
 function newCampaign(
     address _wallet, 
@@ -43,7 +43,7 @@ function newCampaign(
 * *_amount* - hardCap value in Wei
 * *_description* - campaign description string
 
-Change rules of voting
+Change rules of voting:
 ```solidity
 function changeVotingRules(
     uint256 minimumQuorumForProposals,
@@ -55,7 +55,7 @@ function changeVotingRules(
 * *minutesForDebate* - debate deadline in minutes
 * *marginOfVotesForMajority* - majority margin value
 
-Remove congress member
+Remove congress member:
 ```solidity
 function removeMember(
     address targetMember
@@ -63,7 +63,7 @@ function removeMember(
 ```
 * *targetMember* - member account address
 
-Create a new proposal
+Create a new proposal:
 ```solidity
 function newProposal(
     address wallet,
@@ -75,7 +75,7 @@ function newProposal(
 * *amount* - transaction value in Eth
 * *description* - job description string
 
-Set new rate value
+Set new rate value:
 ```solidity
 function setRate(
     uint256 _rate
@@ -105,7 +105,10 @@ Special kind of token that used for user reputation managing.
 It is generated when donator makes a donation. It's equivalent to donate money amount.
 #### methods:
 ```solidity
-function transfer(address _to, uint256 _value) public returns (bool) {
+function transfer(
+    address _to, 
+    uint256 _value
+) public returns (bool) {
     // Transfering is prohobited
     return false;
 }
@@ -114,21 +117,28 @@ function transfer(address _to, uint256 _value) public returns (bool) {
 ### contract [DACOToken](https://github.com/krivov/daco/blob/master/tokens/DACOToken.sol) is MintableToken:
 Kind of token that is used for getting a discount.
 #### methods:
-   Create compaign for fund-raising:
-   ```solidity
-   function addCampaign(address _campaign) onlyOwner public { ... }
-   ```
-   * *_campaign* - campaign organization account address
+Create compaign for fund-raising:
+```solidity
+function addCampaign(
+   address _campaign
+) onlyOwner public { ... }
+```
+* *_campaign* - campaign organization account address
    
-   Remove compaign:
-   ```solidity
-   function removeCampaign(address _campaign) public onlyOwner { ... }
-   ```
-   * *_campaign* - campaign organization account address
+Remove compaign:
+```solidity
+function removeCampaign(
+   address _campaign
+) public onlyOwner { ... }
+```
+* *_campaign* - campaign organization account address
 
-   Send funds for company maker:
-   ```solidity
-   function transfer(address _to, uint256 _value) public returns (bool) { ... }
-   ```
-   * *_to* - campaign organization account address
-   * *_value* - amount of wies to send
+Send funds for company maker:
+```solidity
+function transfer(
+    address _to, 
+    uint256 _value
+) public returns (bool) { ... }
+```
+* *_to* - campaign organization account address
+* *_value* - amount of wies to send
