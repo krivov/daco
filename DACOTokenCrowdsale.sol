@@ -93,12 +93,12 @@ contract DACOTokenCrowdsale is Ownable {
         weiRaised = weiRaised.add(amount);
     }
 
-    // set company finalization status
+    // sets company finalization status
     function setFinalized() public onlyOwner {
         isFinalized = true;
     }
 
-    function goalReached() public constant returns (bool) {
+    function goalReached() private constant returns (bool) {
         return weiRaised >= mainSaleWeiCap;
     }
 }
