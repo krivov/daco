@@ -26,7 +26,7 @@ contract DACOMain is Ownable {
     /**
      * @dev Majority margin is used in voting procedure
      */
-    int256 public majorityMargin;
+    uint256 public majorityMargin;
 
     /**
      * @dev Archive of all member proposals for adding new member
@@ -68,11 +68,11 @@ contract DACOMain is Ownable {
     /**
      * @dev On proposal added
      * @param proposal Proposal identifier
-     * @param recipient Ether recipient
+     * @param owner Ether recipient
      * @param amount Amount of wei to transfer
      */
     event ProposalAdded(uint256 indexed proposal,
-        address indexed recipient,
+        address indexed owner,
         uint256 indexed amount,
         string description);
 
@@ -90,24 +90,10 @@ contract DACOMain is Ownable {
     /**
      * @dev On vote by member accepted
      * @param proposal Proposal identifier
-     * @param position Is proposal accepted by memeber
      * @param voter Congress memeber account address
-     * @param justification Member comment
      */
     event Voted(uint256 indexed proposal,
-        bool    indexed position,
-        address indexed voter,
-        string justification);
-
-    /**
-     * @dev On Proposal closed
-     * @param proposal Proposal identifier
-     * @param quorum Number of votes
-     * @param active Is proposal passed
-     */
-    event ProposalTallied(uint256 indexed proposal,
-        uint256 indexed quorum,
-        bool    indexed active);
+        address indexed voter);
 
     /**
      * @dev On changed membership
@@ -125,19 +111,15 @@ contract DACOMain is Ownable {
      */
     event ChangeOfRules(uint256 indexed minimumQuorum,
         uint256 indexed debatingPeriodInMinutes,
-        int256  indexed majorityMargin);
+        uint256  indexed majorityMargin);
 
     struct Proposal {
-        address recipient;
+        address owner;
+        address wallet;
         uint256 amount;
-        string  description;
-        uint256 votingDeadline;
-        bool    executed;
-        bool    proposalPassed;
         uint256 numberOfVotes;
-        int256  currentResult;
-        bytes32 proposalHash;
-        Vote[]  votes;
+        bool proposalPassed;
+        string  description;
         mapping(address => bool) voted;
     }
 
@@ -145,12 +127,6 @@ contract DACOMain is Ownable {
         address member;
         string  name;
         uint256 memberSince;
-    }
-
-    struct Vote {
-        bool    inSupport;
-        address voter;
-        string  justification;
     }
 
     struct Campaign {
@@ -235,7 +211,7 @@ contract DACOMain is Ownable {
     function changeVotingRules(
         uint256 minimumQuorumForProposals,
         uint256 minutesForDebate,
-        int256  marginOfVotesForMajority
+        uint256  marginOfVotesForMajority
     )
     public onlyOwner
     {
@@ -248,122 +224,76 @@ contract DACOMain is Ownable {
 
     /**
      * @dev Create a new proposal
-     * @param beneficiary Beneficiary account address
-     * @param amount Transaction value in Wei
-     * @param jobDescription Job description string
-     * @param transactionBytecode Bytecode of transaction
+     * @param wallet Beneficiary account address
+     * @param amount Transaction value in Eth
+     * @param description Job description string
      */
     function newProposal(
-        address beneficiary,
+        address wallet,
         uint256 amount,
-        string  jobDescription,
-        bytes   transactionBytecode
+        string  description
     )
     public
-    onlyMembers
     returns (uint256 id)
     {
         id                 = proposals.length++;
         Proposal storage p = proposals[id];
-        p.recipient        = beneficiary;
-        p.amount           = amount;
-        p.description      = jobDescription;
-        p.proposalHash     = keccak256(beneficiary, amount, transactionBytecode);
-        p.votingDeadline   = now + debatingPeriodInMinutes * 1 minutes;
-        p.executed         = false;
-        p.proposalPassed   = false;
-        p.numberOfVotes    = 0;
-        ProposalAdded(id, beneficiary, amount, jobDescription);
-    }
 
-    /**
-     * @dev Check if a proposal code matches
-     * @param id Proposal identifier
-     * @param beneficiary Beneficiary account address
-     * @param amount Transaction value in Wei
-     * @param transactionBytecode Bytecode of transaction
-     */
-    function checkProposalCode(
-        uint256 id,
-        address beneficiary,
-        uint256 amount,
-        bytes   transactionBytecode
-    )
-    public
-    view
-    returns (bool codeChecksOut)
-    {
-        return proposals[id].proposalHash
-        == keccak256(beneficiary, amount, transactionBytecode);
+        p.owner            = msg.sender;
+        p.wallet           = wallet;
+        p.amount           = amount;
+        p.description      = description;
+        p.numberOfVotes    = 0;
+        p.proposalPassed   = false;
+
+        ProposalAdded(id, msg.sender, amount, description);
     }
 
     /**
      * @dev Proposal voting
      * @param id Proposal identifier
-     * @param supportsProposal Is proposal supported
-     * @param justificationText Member comment
      */
     function vote(
-        uint256 id,
-        bool    supportsProposal,
-        string  justificationText
+        uint256 id
     )
     public
     onlyMembers
     {
         Proposal storage p = proposals[id];     // Get the proposal
         require (p.voted[msg.sender] != true);  // If has already voted, cancel
+        require(p.numberOfVotes < majorityMargin); // If proposal already started
+
         p.voted[msg.sender] = true;             // Set this voter as having voted
         p.numberOfVotes++;                      // Increase the number of votes
-        if (supportsProposal) {                 // If they support the proposal
-            p.currentResult++;                  // Increase score
-        } else {                                // If they don't
-            p.currentResult--;                  // Decrease the score
+
+        if (p.numberOfVotes == majorityMargin) {
+            id                 = campaigns.length++;
+            Campaign storage c = campaigns[id];
+
+            c.wallet           = p.wallet;
+            c.amount           = p.amount;
+            c.description      = p.description;
+            c.ownerAddress     = msg.sender;
+            c.isFinished       = false;
+
+            uint256 amountWei = p.amount.mul(1000000000000000000);
+
+            c.crowdsale        = new DACOTokenCrowdsale(
+                amountWei,
+                rate,
+                token,
+                p.wallet,
+                p.description
+            );
+
+            token.mint(c.crowdsale, rate.mul(amountWei));
+            token.addCampaign(c.crowdsale);
+
+            CampaignAdded(id, p.wallet, p.amount, p.description);
         }
+
         // Create a log of this event
-        Voted(id,  supportsProposal, msg.sender, justificationText);
-    }
-
-    /**
-     * @dev Try to execute proposal
-     * @param id Proposal identifier
-     * @param transactionBytecode Transaction data
-     */
-    function executeProposal(
-        uint256 id,
-        bytes   transactionBytecode
-    )
-    public
-    onlyMembers
-    {
-        Proposal storage p = proposals[id];
-        /* Check if the proposal can be executed:
-           - Has the voting deadline arrived?
-           - Has it been already executed or is it being executed?
-           - Does the transaction code match the proposal?
-           - Has a minimum quorum?
-        */
-
-        if (now < p.votingDeadline
-        || p.executed
-        || p.proposalHash != keccak256(p.recipient, p.amount, transactionBytecode)
-        || p.numberOfVotes < minimumQuorum)
-            revert();
-
-        /* execute result */
-        /* If difference between support and opposition is larger than margin */
-        if (p.currentResult > majorityMargin) {
-            // Avoid recursive calling
-
-            p.executed = true;
-            require (p.recipient.call.value(p.amount)(transactionBytecode));
-
-            p.proposalPassed = true;
-        } else {
-            p.proposalPassed = false;
-        }
-        // Fire Events
-        ProposalTallied(id, p.numberOfVotes, p.proposalPassed);
+        Voted(id, msg.sender);
     }
 
     /**
