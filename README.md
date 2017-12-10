@@ -1,4 +1,9 @@
 # DACO - Decentralized autonomous charity organization :green_heart:
+Our platform unites charity organizations, businesses and donators in new way.
+Charity organizations creates new social project that needs to be financed. 
+Open heart people donate money for project that they like
+Socially responsible businesses that also want to take part in charity project offer donators discounts for their services or products.
+Charity organization get needed money, businesses expands their client base, donators receives discounts and a plus in their karma that is much more important.
 
 ## DACO API
 
