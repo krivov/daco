@@ -3,7 +3,8 @@
 ## DACO API
 
 ### contract [DACOMain](https://github.com/krivov/daco/blob/master/DACOMain.sol) is Ownable:
-
+Improved congress contract by [Ethereum Foundation](https://www.ethereum.org/dao#the-blockchain-congress)
+#### methods:
 ```
 function addMember(address targetMember, string memberName) public onlyOwner { ... }
 ```
@@ -90,4 +91,15 @@ function donate(
 Campain finalization:
 ```solidity
 function setFinalized() public onlyOwner { ... }
+```
+
+### contract [KARMAToken](https://github.com/krivov/daco/blob/master/tokens/KARMAToken.sol) is MintableToken:
+Special kind of token that used for user reputation managing.
+It is generated when donator makes a donation. It's equivalent to donate money amount.
+#### methods:
+```solidity
+function transfer(address _to, uint256 _value) public returns (bool) {
+    // Transfering is prohobited
+    return false;
+}
 ```
