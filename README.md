@@ -5,8 +5,8 @@ Open heart people donate money for project that they like
 Socially responsible businesses that also want to take part in charity project offer donators discounts for their services or products.
 Charity organization get needed money, businesses expands their client base, donators receives discounts and a plus in their karma that is much more important.
 
-* :link:DACO smartcontract address - **0xc19D435E84B921f268B465d36651AC6CB82888bB**
-* :link:DACO Token smartcontract address - **0x0fa0ff095762aa1c612797a6a49f576ae677944c**
+:link: DACO smartcontract address - **0xc19D435E84B921f268B465d36651AC6CB82888bB**<br>
+:link: DACO Token smartcontract address - **0x0fa0ff095762aa1c612797a6a49f576ae677944c**
 
 ## DACO API
 
