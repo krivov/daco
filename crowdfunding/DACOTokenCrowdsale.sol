@@ -94,9 +94,8 @@ contract DACOTokenCrowdsale is Ownable {
         }
         uint256 tokens = amount.mul(rate);
         wallet.transfer(amount);
-//        investor.call(bytes4(sha3("transfer(address, uint256)")),investor, tokens);
         DACOToken(token).transfer(investor, tokens);
-        weiRaised = weiRaised.add(wantage);
+        weiRaised = weiRaised.add(amount);
     }
 
     // set company finalization status
