@@ -1,8 +1,12 @@
-DACO - Decentralized autonomous charity organization
+# DACO - Decentralized autonomous charity organization :green_heart:
 
-# DACO API
+## DACO API
 
-## contract DACOMain is Ownable
+### contract [DACOMain](https://github.com/krivov/daco/blob/master/DACOMain.sol) is Ownable:
+
+```
+function addMember(address targetMember, string memberName) public onlyOwner { ... }
+```
 Append new congress member
 * *targetMember* - member account address
 * *memberName* - member full name
@@ -74,3 +78,16 @@ function setRate(
 ```
 
 
+### contract [DACOTokenCrowdsale](https://github.com/krivov/daco/blob/master/DACOTokenCrowdsale.sol) is Ownable:
+Low level token purchase function:
+```solidity
+function donate(
+   address investor
+) payable { ... }
+```
+* *investor* - donator account address
+
+Campain finalization:
+```solidity
+function setFinalized() public onlyOwner { ... }
+```
