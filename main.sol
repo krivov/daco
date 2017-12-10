@@ -174,13 +174,9 @@ contract DACOMain is Ownable {
      * @dev First time setup
      */
     function DACOMain(
-        uint256 minimumQuorumForProposals,
-        uint256 minutesForDebate,
-        int256  marginOfVotesForMajority,
-        address congressLeader,
-        uint256 _rate //0.0000000000000001
+        address congressLeader
     ) public {
-        changeVotingRules(minimumQuorumForProposals, minutesForDebate, marginOfVotesForMajority);
+        changeVotingRules(1, 10000, 1);
         // It’s necessary to add an empty first member
         addMember(0, ''); // and let's add the founder, to save a step later
         if (congressLeader != 0) {
@@ -188,7 +184,7 @@ contract DACOMain is Ownable {
         }
 
         token = new DACOToken();
-        rate = _rate;
+        rate = 1000;
     }
 
     /**
