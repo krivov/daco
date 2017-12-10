@@ -7,8 +7,8 @@ Charity organization get needed money, businesses expands their client base, don
 
 We use [Rinkeby Test Network](https://www.rinkeby.io/)
 
-:link:DACO smartcontract address - **0xc19D435E84B921f268B465d36651AC6CB82888bB**
-:link:DACO Token smartcontract address - **0x0fa0ff095762aa1c612797a6a49f576ae677944c**
+:link: DACO smartcontract address - **0xc19D435E84B921f268B465d36651AC6CB82888bB**<br>
+:link: DACO Token smartcontract address - **0x0fa0ff095762aa1c612797a6a49f576ae677944c**
 
 ## DACO API
 
