@@ -72,7 +72,7 @@ contract DACOTokenCrowdsale is Ownable {
     }
 
     // low level token purchase function
-    function donate(address investor) internal payable {
+    function donate(address investor) payable {
         require(investor != 0x0);
         require(msg.value != 0);
         require(!isFinalized);
